@@ -45,27 +45,37 @@ class _InputSlideState extends State<InputSlide> {
             ),
             SizedBox(height: 16.0),
             SizedBox(
-              width: 200.0, // Ganti dengan lebar yang diinginkan
-              height: 60.0, // Ganti dengan tinggi yang diinginkan
-              child: TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                style: TextStyle(fontSize: 20.0),
-                decoration: InputDecoration(
-                  prefixText: 'Rp. ', // Prefix untuk 'Rp'
-                  hintText: 'Jumlah Uang',
-                  prefixStyle: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold), // Warna prefix
-
-                  border: InputBorder.none, // Menghapus outline border
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                  filled: true,
-                  fillColor: Color(0xffffffff), // Warna latar belakang input
-                ),
-                onChanged: _formatInput,
+              width: 200.0,
+              height: 60.0,
+              child: Row(
+                children: [
+                  Text(
+                    'Rp',
+                    style: TextStyle(
+                        color: Color(0xffbab4b4), fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(fontSize: 20.0),
+                      decoration: InputDecoration(
+                        hintText: 'Jumlah Uang',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                      ),
+                      onChanged: _formatInput,
+                    ),
+                  )
+                ],
               ),
             ),
             SizedBox(height: 16.0),

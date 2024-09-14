@@ -64,6 +64,41 @@ class _WalletHomeState extends State<WalletHome> {
     );
   }
 
+  void _editWalletName() {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('Ubah Nama Wallet'),
+          content: TextField(
+            controller: _walletNameController,
+            decoration: InputDecoration(
+              labelText: 'Nama Wallet',
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Batal'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Simpan'),
+              onPressed: () {
+                setState(() {});
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        );
+      },
+    );
+  }
+
   // Fungsi untuk menghapus transaksi
   void _deleteTransaction(int index) {
     setState(() {
