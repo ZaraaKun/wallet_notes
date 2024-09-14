@@ -12,12 +12,30 @@ class WalletHome extends StatefulWidget {
 class _WalletHomeState extends State<WalletHome> {
   final List<Map<String, dynamic>> _transactions = [];
   double _totalBalance = 0.0;
+  String _lastTransactionType =
+      ''; // Variabel untuk ikon tanda transaksi terakhir
   final TextEditingController _walletNameController =
       TextEditingController(text: 'Nama Wallet');
 
   final NumberFormat currencyFormatter =
       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0);
 
+  // Fungsi untuk menghitung total saldo
+  void _recalculateBalance() {
+    double newBalance = 0.0;
+    for (var transaction in _transactions) {
+      if (transaction['type'] == 'income') {
+        newBalance += transaction['amount'];
+      } else if (transaction['type'] == 'expense') {
+        newBalance -= transaction['amount'];
+      }
+    }
+    setState(() {
+      _totalBalance = newBalance;
+    });
+  }
+
+  // Fungsi untuk menampilkan panel input
   void _showInputSlide(String type) {
     showModalBottomSheet(
       context: context,
@@ -26,6 +44,7 @@ class _WalletHomeState extends State<WalletHome> {
           type: type,
           onSubmit: (amount, description) {
             setState(() {
+              // Tambah transaksi baru
               _transactions.add({
                 'type': type,
                 'amount': amount,
@@ -33,11 +52,11 @@ class _WalletHomeState extends State<WalletHome> {
                 'date': DateFormat('yyyy-MM-dd | HH:mm').format(DateTime.now()),
               });
 
-              if (type == 'income') {
-                _totalBalance += amount;
-              } else if (type == 'expense') {
-                _totalBalance -= amount;
-              }
+              // Update jenis transaksi terakhir untuk ikon
+              _lastTransactionType = type;
+
+              // Recalculate balance after new transaction
+              _recalculateBalance();
             });
           },
         );
@@ -45,52 +64,20 @@ class _WalletHomeState extends State<WalletHome> {
     );
   }
 
-  void _editWalletName() {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: Text('Ubah Nama Wallet'),
-          content: TextField(
-            controller: _walletNameController,
-            decoration: InputDecoration(
-              labelText: 'Nama Wallet',
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Batal'),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-            ),
-            ElevatedButton(
-              child: Text('Simpan'),
-              onPressed: () {
-                setState(() {});
-                Navigator.of(ctx).pop();
-              },
-            ),
-          ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-        );
-      },
-    );
-  }
-
+  // Fungsi untuk menghapus transaksi
   void _deleteTransaction(int index) {
     setState(() {
-      final transaction = _transactions[index];
+      _transactions.removeAt(index);
 
-      if (transaction['type'] == 'income') {
-        _totalBalance -= transaction['amount'];
-      } else if (transaction['type'] == 'expense') {
-        _totalBalance += transaction['amount'];
+      // Update jenis transaksi terakhir (dari transaksi yang ada)
+      if (_transactions.isNotEmpty) {
+        _lastTransactionType = _transactions.last['type'];
+      } else {
+        _lastTransactionType = ''; // Reset jika tidak ada transaksi
       }
 
-      _transactions.removeAt(index);
+      // Recalculate balance after transaction removal
+      _recalculateBalance();
     });
   }
 
@@ -119,6 +106,8 @@ class _WalletHomeState extends State<WalletHome> {
                         totalBalance: _totalBalance,
                         currencyFormatter: currencyFormatter,
                         onEdit: _editWalletName,
+                        lastTransactionType:
+                            _lastTransactionType, // Passing the last transaction type
                       ),
                       SizedBox(height: screenHeight * 0.03),
                       Row(

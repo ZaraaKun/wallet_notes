@@ -6,12 +6,14 @@ class WalletInfo extends StatelessWidget {
   final double totalBalance;
   final NumberFormat currencyFormatter;
   final Function onEdit;
+  final String lastTransactionType;
 
   WalletInfo({
     required this.walletNameController,
     required this.totalBalance,
     required this.currencyFormatter,
     required this.onEdit,
+    required this.lastTransactionType,
   });
 
   @override
@@ -48,13 +50,31 @@ class WalletInfo extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.0),
-          Text(
-            '${currencyFormatter.format(totalBalance)}',
-            style: TextStyle(
-              fontSize: textScaleFactor * 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          Row(
+            children: [
+              Text(
+                currencyFormatter.format(totalBalance),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 10),
+              // Show plus or minus icon based on the last transaction type
+              if (lastTransactionType == 'income')
+                Icon(
+                  Icons.add_circle,
+                  color: Colors.green, // Green for income
+                  size: 32,
+                )
+              else if (lastTransactionType == 'expense')
+                Icon(
+                  Icons.remove_circle,
+                  color: Colors.red, // Red for expense
+                  size: 32,
+                ),
+            ],
           ),
         ],
       ),
