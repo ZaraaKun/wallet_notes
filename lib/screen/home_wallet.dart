@@ -125,70 +125,82 @@ class _WalletHomeState extends State<WalletHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Wallet Notes'),
-        backgroundColor: Color(0xffbb78d5),
+        backgroundColor: Colors.purple,
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.05),
-                  child: Column(
-                    children: [
-                      WalletInfo(
-                        walletNameController: _walletNameController,
-                        totalBalance: _totalBalance,
-                        currencyFormatter: currencyFormatter,
-                        onEdit: _editWalletName,
-                        lastTransactionType:
-                            _lastTransactionType, // Passing the last transaction type
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () => _showInputSlide('income'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'lib/images/your_background_image.png'), // Ganti dengan path gambar Anda
+            fit: BoxFit.cover, // Menutupi seluruh layar
+          ),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.05),
+                    child: Column(
+                      children: [
+                        WalletInfo(
+                          walletNameController: _walletNameController,
+                          totalBalance: _totalBalance,
+                          currencyFormatter: currencyFormatter,
+                          onEdit: _editWalletName,
+                          lastTransactionType: _lastTransactionType,
+                        ),
+                        SizedBox(height: screenHeight * 0.03),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => _showInputSlide('income'),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Text(
+                                'Income',
+                                style:
+                                    TextStyle(fontSize: textScaleFactor * 18),
                               ),
                             ),
-                            child: Text(
-                              'Income',
-                              style: TextStyle(fontSize: textScaleFactor * 18),
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => _showInputSlide('expense'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                            ElevatedButton(
+                              onPressed: () => _showInputSlide('expense'),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Text(
+                                'Outcome',
+                                style:
+                                    TextStyle(fontSize: textScaleFactor * 18),
                               ),
                             ),
-                            child: Text(
-                              'Outcome',
-                              style: TextStyle(fontSize: textScaleFactor * 18),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      HistoryList(
-                        transactions: _transactions,
-                        currencyFormatter: currencyFormatter,
-                        deleteTransaction: _deleteTransaction,
-                        screenWidth: screenWidth,
-                        screenHeight: screenHeight,
-                      ),
-                    ],
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.03),
+                        HistoryList(
+                          transactions: _transactions,
+                          currencyFormatter: currencyFormatter,
+                          deleteTransaction: _deleteTransaction,
+                          screenWidth: screenWidth,
+                          screenHeight: screenHeight,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

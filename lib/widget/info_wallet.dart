@@ -25,8 +25,13 @@ class WalletInfo extends StatelessWidget {
       constraints: BoxConstraints(maxWidth: 400.0),
       padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 20.0),
       decoration: BoxDecoration(
-        color: Colors.deepPurple.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(16.0),
+        image: DecorationImage(
+          image: AssetImage(
+              'lib/images/walletbaground.png'), // Ganti dengan path gambar Anda
+          fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh container
+        ),
+        borderRadius:
+            BorderRadius.circular(12.0), // Radius sudut sesuai keinginan
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
