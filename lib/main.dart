@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:wallet/widget/wallet_name_manager.dart';
 import 'screen/home_wallet.dart';
 import 'transaction.dart'; // Import Transaction class
 
@@ -13,6 +14,7 @@ void main() async {
 
   // Open the box
   await Hive.openBox<Transaction>('transactions');
+  await Hive.openBox<String>('walletName');
 
   runApp(MyApp());
 }

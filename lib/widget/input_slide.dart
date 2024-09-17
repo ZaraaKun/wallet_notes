@@ -6,6 +6,8 @@ import 'package:flutter_numeric_keyboard/flutter_numeric_keyboard.dart';
 class InputSlide extends StatefulWidget {
   final String type;
   final Function(double amount, String description) onSubmit;
+  final FocusNode _amountFocusNode = FocusNode();
+  final FocusNode _descriptionFocusNode = FocusNode();
 
   InputSlide({required this.type, required this.onSubmit});
 
@@ -16,8 +18,6 @@ class InputSlide extends StatefulWidget {
 class _InputSlideState extends State<InputSlide> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-
-  final NumberFormat currencyFormatter = NumberFormat.decimalPattern('id');
   final PanelController _panelController = PanelController();
 
   void _formatInput(String value) {
@@ -50,21 +50,24 @@ class _InputSlideState extends State<InputSlide> {
     }
   }
 
-  void _onNumericInput(String value) {
-    setState(() {
-      _amountController.value = TextEditingValue(
-        text: value,
-        selection: TextSelection.fromPosition(
-          TextPosition(offset: value.length),
-        ),
-      );
-    });
+  void _submit() {
+    final String rawAmount =
+        _amountController.text.replaceAll(RegExp(r'[^\d]'), '');
+    final double amount = double.tryParse(rawAmount) ?? 0.0;
+    final String description = _descriptionController.text;
+
+    if (amount <= 0 || description.isEmpty) {
+      return;
+    }
+
+    widget.onSubmit(amount, description);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanel(
-      controller: _panelController, // Set PanelController
+      controller: _panelController,
       panel: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
@@ -93,6 +96,7 @@ class _InputSlideState extends State<InputSlide> {
                   Expanded(
                     child: TextField(
                       controller: _amountController,
+                      focusNode: widget._amountFocusNode,
                       keyboardType: TextInputType.number,
                       readOnly: true, // Agar tidak muncul keyboard bawaan
                       style: TextStyle(fontSize: 20.0),
@@ -107,6 +111,10 @@ class _InputSlideState extends State<InputSlide> {
                           ),
                           filled: true,
                           fillColor: Color(0xffffffff).withOpacity(0.3)),
+                      onSubmitted: (value) {
+                        FocusScope.of(context)
+                            .requestFocus(widget._descriptionFocusNode);
+                      },
                     ),
                   ),
                 ],
@@ -115,21 +123,23 @@ class _InputSlideState extends State<InputSlide> {
             SizedBox(height: 5.0),
             TextField(
               controller: _descriptionController,
+              focusNode: widget._descriptionFocusNode,
               decoration: InputDecoration(
                 hintText: 'Deskripsi',
-                labelStyle: TextStyle(fontSize: 14.0), // Ukuran font label
-                border: UnderlineInputBorder(), // Border hanya di bawah
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 8.0), // Sesuaikan tinggi
+                labelStyle: TextStyle(fontSize: 14.0),
+                border: UnderlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 8.0),
               ),
-              style: TextStyle(fontSize: 14.0), // Ukuran font input
+              style: TextStyle(fontSize: 14.0),
+              onSubmitted: (value) {
+                _submit();
+              },
             ),
             SizedBox(height: 10.0),
             FlutterNumericKeyboard(
               width: 800,
-              height: 130,
-              showResult:
-                  false, // Set this to false as we handle input manually
+              height: 200,
+              showResult: false,
               resultFunction: (value) {
                 _formatInput(value);
               },
@@ -149,20 +159,8 @@ class _InputSlideState extends State<InputSlide> {
             SizedBox(height: 10.0),
             ElevatedButton(
               child: Text(widget.type == 'income' ? 'Tambah In' : 'Tambah Out'),
-              onPressed: () {
-                final String rawAmount =
-                    _amountController.text.replaceAll(RegExp(r'[^\d]'), '');
-                final double amount = double.tryParse(rawAmount) ?? 0.0;
-                final String description = _descriptionController.text;
-
-                if (amount <= 0 || description.isEmpty) {
-                  return;
-                }
-
-                widget.onSubmit(amount, description);
-                Navigator.of(context).pop();
-              },
-            )
+              onPressed: _submit,
+            ),
           ],
         ),
       ),
@@ -170,8 +168,8 @@ class _InputSlideState extends State<InputSlide> {
         child: Text('Tap to open'),
       ),
       borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-      minHeight: 1000.0,
-      maxHeight: 1000.0, // Set maximum height for the panel
+      minHeight: 500.0, // Set this to the height you want
+      maxHeight: 900.0, // Set this to the height you want
 
       onPanelSlide: (position) {
         if (position > 0.5) {

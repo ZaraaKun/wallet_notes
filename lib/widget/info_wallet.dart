@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../screen/home_wallet.dart';
 
 class WalletInfo extends StatelessWidget {
-  final TextEditingController walletNameController;
+  final String walletName; // Ini harus String
   final double totalBalance;
   final NumberFormat currencyFormatter;
   final Function onEdit;
   final String lastTransactionType;
 
   WalletInfo({
-    required this.walletNameController,
+    required this.walletName,
     required this.totalBalance,
     required this.currencyFormatter,
     required this.onEdit,
@@ -40,7 +41,7 @@ class WalletInfo extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  walletNameController.text,
+                  walletName, // Gunakan walletName di sini
                   style: TextStyle(
                     fontSize: textScaleFactor * 20,
                     fontWeight: FontWeight.normal,
@@ -54,7 +55,6 @@ class WalletInfo extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8.0),
           Row(
             children: [
               Text(
@@ -69,14 +69,14 @@ class WalletInfo extends StatelessWidget {
               // Show plus or minus icon based on the last transaction type
               if (lastTransactionType == 'income')
                 Icon(
-                  Icons.add_circle,
-                  color: Colors.green, // Green for income
+                  Icons.arrow_upward_rounded,
+                  color: Color(0xff00ff08), // Green for income
                   size: 32,
                 )
               else if (lastTransactionType == 'expense')
                 Icon(
-                  Icons.remove_circle,
-                  color: Colors.red, // Red for expense
+                  Icons.arrow_downward_rounded,
+                  color: Color(0xffff1100), // Red for expense
                   size: 32,
                 ),
             ],
