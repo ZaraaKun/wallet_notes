@@ -1,8 +1,12 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import '../widget/info_wallet.dart';
 import '../widget/history_wallet.dart';
 import '../widget/input_slide.dart';
+import '../transaction.dart'; // Import Transaction class
 
 class WalletHome extends StatefulWidget {
   @override
@@ -10,32 +14,54 @@ class WalletHome extends StatefulWidget {
 }
 
 class _WalletHomeState extends State<WalletHome> {
-  final List<Map<String, dynamic>> _transactions = [];
+  late Future<void> _initHiveFuture;
+  late Box<Transaction> _transactionBox;
   double _totalBalance = 0.0;
-  String _lastTransactionType =
-      ''; // Variabel untuk ikon tanda transaksi terakhir
+  String _lastTransactionType = '';
   final TextEditingController _walletNameController =
       TextEditingController(text: 'Nama Wallet');
 
   final NumberFormat currencyFormatter =
       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0);
 
-  // Fungsi untuk menghitung total saldo
-  void _recalculateBalance() {
-    double newBalance = 0.0;
-    for (var transaction in _transactions) {
-      if (transaction['type'] == 'income') {
-        newBalance += transaction['amount'];
-      } else if (transaction['type'] == 'expense') {
-        newBalance -= transaction['amount'];
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
+    _initHive();
+  }
+
+  Future<void> _initHive() async {
+    _transactionBox = await Hive.openBox<Transaction>('transactions');
+    _loadTransactions();
+  }
+
+  void _loadTransactions() {
+    final transactions = _transactionBox.values.toList();
     setState(() {
-      _totalBalance = newBalance;
+      _totalBalance = transactions.fold(0.0, (sum, transaction) {
+        return transaction.type == 'income'
+            ? sum + transaction.amount
+            : sum - transaction.amount;
+      });
     });
   }
 
-  // Fungsi untuk menampilkan panel input
+  void _saveTransaction(Transaction transaction) {
+    _transactionBox.add(transaction);
+    _loadTransactions();
+  }
+
+  void _recalculateBalance() {
+    final transactions = _transactionBox.values.toList();
+    setState(() {
+      _totalBalance = transactions.fold(0.0, (sum, transaction) {
+        return transaction.type == 'income'
+            ? sum + transaction.amount
+            : sum - transaction.amount;
+      });
+    });
+  }
+
   void _showInputSlide(String type) {
     showModalBottomSheet(
       context: context,
@@ -43,20 +69,15 @@ class _WalletHomeState extends State<WalletHome> {
         return InputSlide(
           type: type,
           onSubmit: (amount, description) {
+            final transaction = Transaction(
+              type: type,
+              amount: amount,
+              description: description,
+              date: DateFormat('yyyy-MM-dd | HH:mm').format(DateTime.now()),
+            );
+            _saveTransaction(transaction);
             setState(() {
-              // Tambah transaksi baru
-              _transactions.add({
-                'type': type,
-                'amount': amount,
-                'description': description,
-                'date': DateFormat('yyyy-MM-dd | HH:mm').format(DateTime.now()),
-              });
-
-              // Update jenis transaksi terakhir untuk ikon
               _lastTransactionType = type;
-
-              // Recalculate balance after new transaction
-              _recalculateBalance();
             });
           },
         );
@@ -99,19 +120,9 @@ class _WalletHomeState extends State<WalletHome> {
     );
   }
 
-  // Fungsi untuk menghapus transaksi
   void _deleteTransaction(int index) {
     setState(() {
-      _transactions.removeAt(index);
-
-      // Update jenis transaksi terakhir (dari transaksi yang ada)
-      if (_transactions.isNotEmpty) {
-        _lastTransactionType = _transactions.last['type'];
-      } else {
-        _lastTransactionType = ''; // Reset jika tidak ada transaksi
-      }
-
-      // Recalculate balance after transaction removal
+      _transactionBox.deleteAt(index);
       _recalculateBalance();
     });
   }
@@ -125,18 +136,14 @@ class _WalletHomeState extends State<WalletHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Wallet Notes'),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
         backgroundColor: Colors.purple,
+        centerTitle: true,
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-                'lib/images/your_background_image.png'), // Ganti dengan path gambar Anda
-            fit: BoxFit.cover, // Menutupi seluruh layar
-          ),
-        ),
+        decoration: BoxDecoration(),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
@@ -187,12 +194,22 @@ class _WalletHomeState extends State<WalletHome> {
                         ),
                         SizedBox(height: screenHeight * 0.03),
                         HistoryList(
-                          transactions: _transactions,
+                          transactions: _transactionBox.values
+                              .toList() // Ensure toList() is used here
+                              .map((transaction) => transaction.toMap())
+                              .toList(),
                           currencyFormatter: currencyFormatter,
                           deleteTransaction: _deleteTransaction,
                           screenWidth: screenWidth,
                           screenHeight: screenHeight,
                         ),
+                        SizedBox(height: 20.0),
+                        Text(
+                          'made by kudou and AI',
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.4),
+                              fontSize: 15),
+                        )
                       ],
                     ),
                   ),

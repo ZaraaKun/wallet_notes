@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'screen/home_wallet.dart';
+import 'transaction.dart'; // Import Transaction class
 
-void main() {
-  runApp(WalletApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  // Register the adapter for the Transaction class
+  Hive.registerAdapter(TransactionAdapter());
+
+  // Open the box
+  await Hive.openBox<Transaction>('transactions');
+
+  runApp(MyApp());
 }
 
-class WalletApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wallet Digital',
+      title: 'Wallet Notes',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: WalletHome(),
+      home: WalletHome(), // Make sure this matches the HomeWallet class
     );
   }
 }
