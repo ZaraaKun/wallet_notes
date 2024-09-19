@@ -153,11 +153,14 @@ class _WalletHomeState extends State<WalletHome> {
         }
 
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Wallet Notes'),
-            titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
-            backgroundColor: Colors.purple,
-            centerTitle: true,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(40.0), // Atur tinggi yang diinginkan
+            child: AppBar(
+              title: Text('Wallet Notes'),
+              titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+              backgroundColor: Colors.purple,
+              centerTitle: true,
+            ),
           ),
           body: Container(
             width: double.infinity,
