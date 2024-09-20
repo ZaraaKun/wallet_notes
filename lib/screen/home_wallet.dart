@@ -89,13 +89,17 @@ class _WalletHomeState extends State<WalletHome> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: Text('Ubah Nama Wallet'),
+          title: Text(
+            'Ubah Nama Wallet',
+            style: TextStyle(fontFamily: 'AntipastoPro'),
+          ),
           content: TextField(
+            style: TextStyle(fontFamily: 'AntipastoPro'),
             controller: TextEditingController(
                 text:
                     _walletBox.get('walletName', defaultValue: 'Nama Wallet')),
             decoration: InputDecoration(
-              labelText: 'Nama Wallet',
+              labelText: 'Wallet',
             ),
             onChanged: (value) {
               _walletBox.put('walletName', value);
@@ -103,13 +107,15 @@ class _WalletHomeState extends State<WalletHome> {
           ),
           actions: [
             TextButton(
-              child: Text('Batal'),
+              child:
+                  Text(style: TextStyle(fontFamily: 'AntipastoPro'), 'Batal'),
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
             ),
             ElevatedButton(
-              child: Text('Simpan'),
+              child:
+                  Text(style: TextStyle(fontFamily: 'AntipastoPro'), 'Simpan'),
               onPressed: () {
                 setState(() {}); // Update nama wallet
                 Navigator.of(ctx).pop();
@@ -157,7 +163,10 @@ class _WalletHomeState extends State<WalletHome> {
             preferredSize: Size.fromHeight(40.0), // Atur tinggi yang diinginkan
             child: AppBar(
               title: Text('Wallet Notes'),
-              titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+              titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontFamily: ('AntipastoPro')),
               backgroundColor: Colors.purple,
               centerTitle: true,
             ),
@@ -199,7 +208,8 @@ class _WalletHomeState extends State<WalletHome> {
                                     'Income',
                                     style: TextStyle(
                                         fontSize: textScaleFactor * 18,
-                                        color: Colors.white),
+                                        color: Colors.white,
+                                        fontFamily: 'AntipastoPro'),
                                   ),
                                 ),
                                 ElevatedButton(
@@ -212,7 +222,8 @@ class _WalletHomeState extends State<WalletHome> {
                                   child: Text(
                                     'Outcome',
                                     style: TextStyle(
-                                        fontSize: textScaleFactor * 18),
+                                        fontSize: textScaleFactor * 18,
+                                        fontFamily: 'AntipastoPro'),
                                   ),
                                 ),
                               ],

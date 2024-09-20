@@ -43,6 +43,7 @@ class WalletInfo extends StatelessWidget {
                 child: Text(
                   walletName, // Gunakan walletName di sini
                   style: TextStyle(
+                    fontFamily: 'AntipastoPro',
                     fontSize: textScaleFactor * 20,
                     fontWeight: FontWeight.normal,
                     color: Colors.white,

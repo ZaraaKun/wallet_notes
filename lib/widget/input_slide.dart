@@ -77,7 +77,10 @@ class _InputSlideState extends State<InputSlide> {
               widget.type == 'income'
                   ? 'Tambah Pemasukan'
                   : 'Tambah Pengeluaran',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'AntipastoPro'),
             ),
             SizedBox(height: 10.0),
             SizedBox(
@@ -88,6 +91,7 @@ class _InputSlideState extends State<InputSlide> {
                   Text(
                     'Rp',
                     style: TextStyle(
+                        fontFamily: 'AntipastoPro',
                         fontSize: 24,
                         color: Color(0xffbab4b4),
                         fontWeight: FontWeight.bold),
@@ -125,12 +129,12 @@ class _InputSlideState extends State<InputSlide> {
               controller: _descriptionController,
               focusNode: widget._descriptionFocusNode,
               decoration: InputDecoration(
-                hintText: 'Deskripsi',
+                hintText: 'Deskripsi Wajib Diisi',
                 labelStyle: TextStyle(fontSize: 14.0),
                 border: UnderlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(vertical: 8.0),
               ),
-              style: TextStyle(fontSize: 14.0),
+              style: TextStyle(fontFamily: 'AntipastoPro', fontSize: 14.0),
               onSubmitted: (value) {
                 _submit();
               },
@@ -158,7 +162,10 @@ class _InputSlideState extends State<InputSlide> {
             ),
             SizedBox(height: 10.0),
             ElevatedButton(
-              child: Text(widget.type == 'income' ? 'Tambah In' : 'Tambah Out'),
+              child: Text(
+                widget.type == 'income' ? 'Tambah In' : 'Tambah Out',
+                style: TextStyle(fontFamily: 'AntipastoPro'),
+              ),
               onPressed: _submit,
             ),
           ],

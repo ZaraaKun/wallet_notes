@@ -60,11 +60,12 @@ class HistoryList extends StatelessWidget {
                       title: Text(
                         transaction['description'],
                         style: TextStyle(
-                          color: transaction['type'] == 'income'
-                              ? Colors.green
-                              : Colors.red,
-                          fontSize: MediaQuery.of(context).textScaleFactor * 16,
-                        ),
+                            color: transaction['type'] == 'income'
+                                ? Colors.green
+                                : Colors.red,
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 16,
+                            fontFamily: 'AntipastoPro'),
                       ),
                       //
                       //
@@ -104,13 +105,19 @@ class HistoryList extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (ctx) => AlertDialog(
-                              title: Text('Konfirmasi Hapus'),
-                              content:
-                                  Text('Yakin ingin menghapus History ini?'),
+                              title: Text(
+                                  style: TextStyle(fontFamily: 'AntipastoPro'),
+                                  'Konfirmasi Hapus'),
+                              content: Text(
+                                  style: TextStyle(fontFamily: 'AnripastoPro'),
+                                  'Yakin ingin menghapus History ini?'),
                               actions: [
                                 //Batal
                                 TextButton(
-                                  child: Text('Batal'),
+                                  child: Text(
+                                      style:
+                                          TextStyle(fontFamily: 'AnripastoPro'),
+                                      'Batal'),
                                   onPressed: () {
                                     Navigator.of(ctx).pop();
                                   },
@@ -122,7 +129,10 @@ class HistoryList extends StatelessWidget {
                                 ),
                                 //Apus
                                 ElevatedButton(
-                                  child: Text('Hapus'),
+                                  child: Text(
+                                      style:
+                                          TextStyle(fontFamily: 'AnripastoPro'),
+                                      'Hapus'),
                                   onPressed: () {
                                     deleteTransaction(transactions.length -
                                         1 -
