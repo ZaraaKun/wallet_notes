@@ -190,6 +190,7 @@ class _WalletHomeState extends State<WalletHome> {
                                 ElevatedButton(
                                   onPressed: () => _showInputSlide('income'),
                                   style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xffa358ae),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -197,7 +198,8 @@ class _WalletHomeState extends State<WalletHome> {
                                   child: Text(
                                     'Income',
                                     style: TextStyle(
-                                        fontSize: textScaleFactor * 18),
+                                        fontSize: textScaleFactor * 18,
+                                        color: Colors.white),
                                   ),
                                 ),
                                 ElevatedButton(
