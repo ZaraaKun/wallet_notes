@@ -132,7 +132,7 @@ class HistoryList extends StatelessWidget {
                                   child: Text(
                                       style:
                                           TextStyle(fontFamily: 'AnripastoPro'),
-                                      'Hapus'),
+                                      'Delate'),
                                   onPressed: () {
                                     deleteTransaction(transactions.length -
                                         1 -
